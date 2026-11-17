@@ -69,8 +69,8 @@ class HmsIapPlugin : Plugin() {
 
     @PluginMethod
     fun isSandboxActivated(call: PluginCall) {
-        requireClient(call) ?: return
-        notImplemented(call, "0.2.0")
+        val iap = requireClient(call) ?: return
+        iap.isSandboxActivated { step -> handleStep(call, step, null) }
     }
 
     @PluginMethod

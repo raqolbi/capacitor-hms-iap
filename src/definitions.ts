@@ -49,6 +49,7 @@ export type HmsIapErrorCode =
   | 'IAP_SDK_MISSING'
   | 'UNAVAILABLE'
   | 'APP_NOT_CONFIGURED'
+  | 'IAP_NOT_ACTIVATED'
   | 'NOT_IMPLEMENTED'
   | 'UNKNOWN';
 

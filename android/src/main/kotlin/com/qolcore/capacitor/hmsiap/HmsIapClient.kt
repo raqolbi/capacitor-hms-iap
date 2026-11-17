@@ -8,6 +8,7 @@ import com.huawei.hms.iap.Iap
 import com.huawei.hms.iap.IapApiException
 import com.huawei.hms.iap.IapClient
 import com.huawei.hms.iap.entity.IsEnvReadyResult
+import com.huawei.hms.iap.entity.IsSandboxActivatedReq
 import com.huawei.hms.iap.entity.OrderStatusCode
 import com.huawei.hms.iap.entity.OwnedPurchasesReq
 import com.huawei.hms.iap.entity.ProductInfoReq
@@ -47,6 +48,19 @@ internal class HmsIapClient(activity: Activity) {
             } else {
                 callback(Step.Failed(HmsIapErrorMapper.fromException(e)))
             }
+        }
+    }
+
+    fun isSandboxActivated(callback: (Step) -> Unit) {
+        client.isSandboxActivated(IsSandboxActivatedReq()).addOnSuccessListener { result ->
+            callback(Step.Done(JSObject().apply {
+                put("isSandboxUser", result.getIsSandboxUser() == true)
+                put("isSandboxApk", result.getIsSandboxApk() == true)
+                result.versionInApk?.let { put("versionInApk", it) }
+                result.versionFrMarket?.let { put("versionFromMarket", it) }
+            }))
+        }.addOnFailureListener { e ->
+            callback(Step.Failed(HmsIapErrorMapper.fromException(e)))
         }
     }
 

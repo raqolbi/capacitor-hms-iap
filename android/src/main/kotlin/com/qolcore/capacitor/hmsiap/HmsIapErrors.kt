@@ -22,6 +22,7 @@ object HmsIapErrors {
     const val IAP_SDK_MISSING = "IAP_SDK_MISSING"
     const val UNAVAILABLE = "UNAVAILABLE"
     const val APP_NOT_CONFIGURED = "APP_NOT_CONFIGURED"
+    const val IAP_NOT_ACTIVATED = "IAP_NOT_ACTIVATED"
     const val NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
     const val UNKNOWN = "UNKNOWN"
 }
@@ -44,6 +45,7 @@ internal object HmsIapErrorMapper {
         OrderStatusCode.ORDER_ACCOUNT_AREA_NOT_SUPPORTED -> HmsIapErrors.REGION_NOT_SUPPORTED
         OrderStatusCode.ORDER_STATE_NET_ERROR -> HmsIapErrors.NETWORK_ERROR
         OrderStatusCode.ORDER_STATE_PARAM_ERROR -> HmsIapErrors.INVALID_ARGUMENT
+        OrderStatusCode.ORDER_STATE_IAP_NOT_ACTIVATED -> HmsIapErrors.IAP_NOT_ACTIVATED
         // HMS framework (not OrderStatusCode): app ID / signing fingerprint check failed.
         HMS_APP_AUTH_FAILED -> HmsIapErrors.APP_NOT_CONFIGURED
         else -> HmsIapErrors.UNKNOWN

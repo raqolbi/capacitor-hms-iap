@@ -1,6 +1,6 @@
 # capacitor-hms-iap
 
-> **Status: early development (0.1.0-dev).** Implemented on Android: `isAvailable`, `isEnvReady`, `getProducts`, `purchase`, `getOwnedPurchases`. Other methods reject with `NOT_IMPLEMENTED`. Not published to npm yet.
+> **Status: early development (0.1.0-dev).** Implemented on Android: `isAvailable`, `isEnvReady`, `isSandboxActivated`, `getProducts`, `purchase`, `getOwnedPurchases`. Other methods reject with `NOT_IMPLEMENTED`. Not published to npm yet.
 
 A Capacitor plugin for **HUAWEI In-App Purchases (IAP)**: sell consumables, non-consumables and subscriptions in Android apps distributed through **Huawei AppGallery**.
 

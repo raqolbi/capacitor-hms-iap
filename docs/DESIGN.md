@@ -212,11 +212,15 @@ export interface ConsumeResult {
 - Only one checkout may run at a time. A second `purchase()` while one is active rejects with `PURCHASE_IN_PROGRESS`.
 - If the activity result intent is `null`, the call rejects with `NO_RESULT`.
 
-### 3.2 Threading
+### 3.2 Screen state
+
+Observed on EMUI 12 / HMS Core 6.16.4: with the screen off, an IAP request can stay unanswered until the screen is turned on. Apps should call IAP methods while in the foreground.
+
+### 3.3 Threading
 
 All HMS `Task` listeners run on the main thread; results are resolved directly. No work is done on the WebView thread.
 
-### 3.3 Dependencies
+### 3.4 Dependencies
 
 ```gradle
 // plugin/android/build.gradle
@@ -232,7 +236,7 @@ dependencies {
 
 Because the SDK is `compileOnly`, the **app** must add `implementation "com.huawei.hms:iap:<version>"` (or a flavor-scoped variant such as `huaweiImplementation`). When the classes are missing at runtime, every method except `isAvailable` rejects with `IAP_SDK_MISSING`. This lets multi-store apps keep Huawei code out of other store builds.
 
-### 3.4 Web and iOS
+### 3.5 Web and iOS
 
 All methods reject with `UNAVAILABLE`, except `isAvailable`, which resolves `{ available: false, reason: 'NOT_ANDROID' }`.
 
@@ -259,6 +263,7 @@ interface HmsIapError {
 | `ALREADY_CONSUMED` | `ORDER_PRODUCT_CONSUMED` (60053) | |
 | `REGION_NOT_SUPPORTED` | `ORDER_ACCOUNT_AREA_NOT_SUPPORTED` (60054) | IAP not available for the account's region |
 | `NETWORK_ERROR` | `ORDER_STATE_NET_ERROR` (60005) | |
+| `IAP_NOT_ACTIVATED` | `ORDER_STATE_IAP_NOT_ACTIVATED` (60002) | IAP not enabled for this app in AppGallery Connect, or merchant/IAP agreement not completed yet (observed on device) |
 | `INVALID_ARGUMENT` | `ORDER_STATE_PARAM_ERROR` (60001) or plugin validation | |
 | `PURCHASE_IN_PROGRESS` | plugin | Another checkout is open |
 | `NO_RESULT` | plugin | Activity returned no data |
