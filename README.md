@@ -1,6 +1,6 @@
 # capacitor-hms-iap
 
-> **Status: early development (0.1.0-dev).** The TypeScript API is defined; on Android only `isAvailable()` works so far. Not published to npm yet.
+> **Status: early development (0.1.0-dev).** Implemented on Android: `isAvailable`, `isEnvReady`, `getProducts`, `purchase`, `getOwnedPurchases`. Other methods reject with `NOT_IMPLEMENTED`. Not published to npm yet.
 
 A Capacitor plugin for **HUAWEI In-App Purchases (IAP)**: sell consumables, non-consumables and subscriptions in Android apps distributed through **Huawei AppGallery**.
 
@@ -119,12 +119,12 @@ Generated from `src/definitions.ts` by `npm run docgen`.
 ### isAvailable()
 
 ```typescript
-isAvailable() => Promise<AvailabilityResult>
+isAvailable() => any
 ```
 
 Whether HMS IAP can be used on this device and build. Never rejects.
 
-**Returns:** <code>Promise&lt;<a href="#availabilityresult">AvailabilityResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -132,7 +132,7 @@ Whether HMS IAP can be used on this device and build. Never rejects.
 ### isEnvReady(...)
 
 ```typescript
-isEnvReady(options?: EnvReadyOptions | undefined) => Promise<EnvReadyResult>
+isEnvReady(options?: EnvReadyOptions | undefined) => any
 ```
 
 Checks HUAWEI ID sign-in and IAP availability for the user's region.
@@ -141,7 +141,7 @@ Checks HUAWEI ID sign-in and IAP availability for the user's region.
 | ------------- | ----------------------------------------------------------- |
 | **`options`** | <code><a href="#envreadyoptions">EnvReadyOptions</a></code> |
 
-**Returns:** <code>Promise&lt;<a href="#envreadyresult">EnvReadyResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -149,12 +149,12 @@ Checks HUAWEI ID sign-in and IAP availability for the user's region.
 ### isSandboxActivated()
 
 ```typescript
-isSandboxActivated() => Promise<SandboxResult>
+isSandboxActivated() => any
 ```
 
 Testing only: whether the current account and APK are in the sandbox.
 
-**Returns:** <code>Promise&lt;<a href="#sandboxresult">SandboxResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -162,7 +162,7 @@ Testing only: whether the current account and APK are in the sandbox.
 ### getProducts(...)
 
 ```typescript
-getProducts(options: GetProductsOptions) => Promise<{ products: Product[]; }>
+getProducts(options: GetProductsOptions) => any
 ```
 
 Localized product information configured in AppGallery Connect.
@@ -171,7 +171,7 @@ Localized product information configured in AppGallery Connect.
 | ------------- | ----------------------------------------------------------------- |
 | **`options`** | <code><a href="#getproductsoptions">GetProductsOptions</a></code> |
 
-**Returns:** <code>Promise&lt;{ products: Product[]; }&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -179,7 +179,7 @@ Localized product information configured in AppGallery Connect.
 ### purchase(...)
 
 ```typescript
-purchase(options: PurchaseOptions) => Promise<PurchaseResult>
+purchase(options: PurchaseOptions) => any
 ```
 
 Launches the Huawei checkout screen.
@@ -188,7 +188,7 @@ Launches the Huawei checkout screen.
 | ------------- | ----------------------------------------------------------- |
 | **`options`** | <code><a href="#purchaseoptions">PurchaseOptions</a></code> |
 
-**Returns:** <code>Promise&lt;<a href="#purchaseresult">PurchaseResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -196,7 +196,7 @@ Launches the Huawei checkout screen.
 ### consumePurchase(...)
 
 ```typescript
-consumePurchase(options: ConsumeOptions) => Promise<ConsumeResult>
+consumePurchase(options: ConsumeOptions) => any
 ```
 
 Consumes a consumable so it can be bought again.
@@ -205,7 +205,7 @@ Consumes a consumable so it can be bought again.
 | ------------- | --------------------------------------------------------- |
 | **`options`** | <code><a href="#consumeoptions">ConsumeOptions</a></code> |
 
-**Returns:** <code>Promise&lt;<a href="#consumeresult">ConsumeResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -213,7 +213,7 @@ Consumes a consumable so it can be bought again.
 ### getOwnedPurchases(...)
 
 ```typescript
-getOwnedPurchases(options: OwnedQuery) => Promise<OwnedPurchasesResult>
+getOwnedPurchases(options: OwnedQuery) => any
 ```
 
 Owned items: unconsumed consumables, non-consumables, active subscriptions.
@@ -222,7 +222,7 @@ Owned items: unconsumed consumables, non-consumables, active subscriptions.
 | ------------- | ------------------------------------------------- |
 | **`options`** | <code><a href="#ownedquery">OwnedQuery</a></code> |
 
-**Returns:** <code>Promise&lt;<a href="#ownedpurchasesresult">OwnedPurchasesResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -230,7 +230,7 @@ Owned items: unconsumed consumables, non-consumables, active subscriptions.
 ### getPurchaseHistory(...)
 
 ```typescript
-getPurchaseHistory(options: OwnedQuery) => Promise<OwnedPurchasesResult>
+getPurchaseHistory(options: OwnedQuery) => any
 ```
 
 History: consumed consumables and all subscription receipts.
@@ -239,7 +239,7 @@ History: consumed consumables and all subscription receipts.
 | ------------- | ------------------------------------------------- |
 | **`options`** | <code><a href="#ownedquery">OwnedQuery</a></code> |
 
-**Returns:** <code>Promise&lt;<a href="#ownedpurchasesresult">OwnedPurchasesResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -247,7 +247,7 @@ History: consumed consumables and all subscription receipts.
 ### openSubscriptionManagement(...)
 
 ```typescript
-openSubscriptionManagement(options?: SubscriptionManagementOptions | undefined) => Promise<void>
+openSubscriptionManagement(options?: SubscriptionManagementOptions | undefined) => any
 ```
 
 Opens Huawei's subscription management screen.
@@ -256,16 +256,20 @@ Opens Huawei's subscription management screen.
 | ------------- | --------------------------------------------------------------------------------------- |
 | **`options`** | <code><a href="#subscriptionmanagementoptions">SubscriptionManagementOptions</a></code> |
 
+**Returns:** <code>any</code>
+
 --------------------
 
 
 ### enablePendingPurchase()
 
 ```typescript
-enablePendingPurchase() => Promise<void>
+enablePendingPurchase() => any
 ```
 
 Opt in to pending purchases.
+
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -273,7 +277,7 @@ Opt in to pending purchases.
 ### setLogging(...)
 
 ```typescript
-setLogging(options: LoggingOptions) => Promise<void>
+setLogging(options: LoggingOptions) => any
 ```
 
 Turns verbose native logging on or off. Tokens and signatures are never logged.
@@ -281,6 +285,8 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 | Param         | Type                                                      |
 | ------------- | --------------------------------------------------------- |
 | **`options`** | <code><a href="#loggingoptions">LoggingOptions</a></code> |
+
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -296,6 +302,14 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 | **`reason`**    | <code><a href="#availabilityreason">AvailabilityReason</a></code> | Set when `available` is false. |
 
 
+#### EnvReadyOptions
+
+| Prop                  | Type                 | Description                                                         | Default            |
+| --------------------- | -------------------- | ------------------------------------------------------------------- | ------------------ |
+| **`resolveSignIn`**   | <code>boolean</code> | Launch the HUAWEI ID sign-in screen when the user is not signed in. | <code>true</code>  |
+| **`supportAppTouch`** | <code>boolean</code> | Passed to `IapClient.isEnvReady(boolean)`.                          | <code>false</code> |
+
+
 #### EnvReadyResult
 
 | Prop             | Type                | Description                                     |
@@ -303,14 +317,6 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 | **`returnCode`** | <code>number</code> |                                                 |
 | **`country`**    | <code>string</code> | Country/region of the HUAWEI ID, when provided. |
 | **`carrierId`**  | <code>string</code> |                                                 |
-
-
-#### EnvReadyOptions
-
-| Prop                  | Type                 | Description                                                         | Default            |
-| --------------------- | -------------------- | ------------------------------------------------------------------- | ------------------ |
-| **`resolveSignIn`**   | <code>boolean</code> | Launch the HUAWEI ID sign-in screen when the user is not signed in. | <code>true</code>  |
-| **`supportAppTouch`** | <code>boolean</code> | Passed to `IapClient.isEnvReady(boolean)`.                          | <code>false</code> |
 
 
 #### SandboxResult
@@ -321,6 +327,14 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 | **`isSandboxApk`**      | <code>boolean</code> |
 | **`versionInApk`**      | <code>string</code>  |
 | **`versionFromMarket`** | <code>string</code>  |
+
+
+#### GetProductsOptions
+
+| Prop             | Type                                                | Description                                                          |
+| ---------------- | --------------------------------------------------- | -------------------------------------------------------------------- |
+| **`productIds`** | <code>{}</code>                                     | <a href="#product">Product</a> IDs configured in AppGallery Connect. |
+| **`type`**       | <code><a href="#producttype">ProductType</a></code> |                                                                      |
 
 
 #### Product
@@ -349,12 +363,15 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 | **`offerUsedStatus`**          | <code>number</code>                                 |                                                 |
 
 
-#### GetProductsOptions
+#### PurchaseOptions
 
-| Prop             | Type                                                | Description                                                          |
-| ---------------- | --------------------------------------------------- | -------------------------------------------------------------------- |
-| **`productIds`** | <code>string[]</code>                               | <a href="#product">Product</a> IDs configured in AppGallery Connect. |
-| **`type`**       | <code><a href="#producttype">ProductType</a></code> |                                                                      |
+| Prop                     | Type                                                              | Description                                   |
+| ------------------------ | ----------------------------------------------------------------- | --------------------------------------------- |
+| **`productId`**          | <code>string</code>                                               |                                               |
+| **`type`**               | <code><a href="#producttype">ProductType</a></code>               |                                               |
+| **`developerPayload`**   | <code>string</code>                                               | Echoed back in the purchase data.             |
+| **`reservedInfo`**       | <code>string</code>                                               | JSON string passed to HMS as `reservedInfor`. |
+| **`signatureAlgorithm`** | <code><a href="#signaturealgorithm">SignatureAlgorithm</a></code> |                                               |
 
 
 #### PurchaseResult
@@ -369,43 +386,23 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 
 #### InAppPurchase
 
-| Prop                      | Type                                                             | Description                       |
-| ------------------------- | ---------------------------------------------------------------- | --------------------------------- |
-| **`orderId`**             | <code>string</code>                                              |                                   |
-| **`productId`**           | <code>string</code>                                              |                                   |
-| **`purchaseToken`**       | <code>string</code>                                              |                                   |
-| **`purchaseState`**       | <code><a href="#purchasestate">PurchaseState</a></code>          |                                   |
-| **`purchaseTime`**        | <code>number</code>                                              | Epoch milliseconds.               |
-| **`kind`**                | <code><a href="#producttype">ProductType</a></code>              |                                   |
-| **`packageName`**         | <code>string</code>                                              |                                   |
-| **`developerPayload`**    | <code>string</code>                                              |                                   |
-| **`consumptionState`**    | <code>number</code>                                              |                                   |
-| **`confirmed`**           | <code>number</code>                                              |                                   |
-| **`subscriptionId`**      | <code>string</code>                                              |                                   |
-| **`isSubscriptionValid`** | <code>boolean</code>                                             |                                   |
-| **`autoRenewing`**        | <code>boolean</code>                                             |                                   |
-| **`expirationDate`**      | <code>number</code>                                              | Epoch milliseconds.               |
-| **`raw`**                 | <code><a href="#record">Record</a>&lt;string, unknown&gt;</code> | Every field of the original JSON. |
-
-
-#### PurchaseOptions
-
-| Prop                     | Type                                                              | Description                                   |
-| ------------------------ | ----------------------------------------------------------------- | --------------------------------------------- |
-| **`productId`**          | <code>string</code>                                               |                                               |
-| **`type`**               | <code><a href="#producttype">ProductType</a></code>               |                                               |
-| **`developerPayload`**   | <code>string</code>                                               | Echoed back in the purchase data.             |
-| **`reservedInfo`**       | <code>string</code>                                               | JSON string passed to HMS as `reservedInfor`. |
-| **`signatureAlgorithm`** | <code><a href="#signaturealgorithm">SignatureAlgorithm</a></code> |                                               |
-
-
-#### ConsumeResult
-
-| Prop                     | Type                                                              |
-| ------------------------ | ----------------------------------------------------------------- |
-| **`consumeData`**        | <code>string</code>                                               |
-| **`signature`**          | <code>string</code>                                               |
-| **`signatureAlgorithm`** | <code><a href="#signaturealgorithm">SignatureAlgorithm</a></code> |
+| Prop                      | Type                                                    | Description                       |
+| ------------------------- | ------------------------------------------------------- | --------------------------------- |
+| **`orderId`**             | <code>string</code>                                     |                                   |
+| **`productId`**           | <code>string</code>                                     |                                   |
+| **`purchaseToken`**       | <code>string</code>                                     |                                   |
+| **`purchaseState`**       | <code><a href="#purchasestate">PurchaseState</a></code> |                                   |
+| **`purchaseTime`**        | <code>number</code>                                     | Epoch milliseconds.               |
+| **`kind`**                | <code><a href="#producttype">ProductType</a></code>     |                                   |
+| **`packageName`**         | <code>string</code>                                     |                                   |
+| **`developerPayload`**    | <code>string</code>                                     |                                   |
+| **`consumptionState`**    | <code>number</code>                                     |                                   |
+| **`confirmed`**           | <code>number</code>                                     |                                   |
+| **`subscriptionId`**      | <code>string</code>                                     |                                   |
+| **`isSubscriptionValid`** | <code>boolean</code>                                    |                                   |
+| **`autoRenewing`**        | <code>boolean</code>                                    |                                   |
+| **`expirationDate`**      | <code>number</code>                                     | Epoch milliseconds.               |
+| **`raw`**                 | <code>Record&lt;string, unknown&gt;</code>              | Every field of the original JSON. |
 
 
 #### ConsumeOptions
@@ -417,13 +414,13 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 | **`signatureAlgorithm`** | <code><a href="#signaturealgorithm">SignatureAlgorithm</a></code> |
 
 
-#### OwnedPurchasesResult
+#### ConsumeResult
 
-| Prop                    | Type                          | Description                                       |
-| ----------------------- | ----------------------------- | ------------------------------------------------- |
-| **`purchases`**         | <code>PurchaseResult[]</code> |                                                   |
-| **`pendingPurchases`**  | <code>PurchaseResult[]</code> | Purchases waiting for payment (pending purchase). |
-| **`continuationToken`** | <code>string</code>           | Present when more pages are available.            |
+| Prop                     | Type                                                              |
+| ------------------------ | ----------------------------------------------------------------- |
+| **`consumeData`**        | <code>string</code>                                               |
+| **`signature`**          | <code>string</code>                                               |
+| **`signatureAlgorithm`** | <code><a href="#signaturealgorithm">SignatureAlgorithm</a></code> |
 
 
 #### OwnedQuery
@@ -433,6 +430,15 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 | **`type`**               | <code><a href="#producttype">ProductType</a></code>               |                                                    |
 | **`continuationToken`**  | <code>string</code>                                               | Pass the token from the previous page to continue. |
 | **`signatureAlgorithm`** | <code><a href="#signaturealgorithm">SignatureAlgorithm</a></code> |                                                    |
+
+
+#### OwnedPurchasesResult
+
+| Prop                    | Type                | Description                                       |
+| ----------------------- | ------------------- | ------------------------------------------------- |
+| **`purchases`**         | <code>{}</code>     |                                                   |
+| **`pendingPurchases`**  | <code>{}</code>     | Purchases waiting for payment (pending purchase). |
+| **`continuationToken`** | <code>string</code> | Present when more pages are available.            |
 
 
 #### SubscriptionManagementOptions
@@ -455,13 +461,6 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 #### AvailabilityReason
 
 <code>'NOT_ANDROID' | 'HMS_CORE_MISSING' | 'HMS_CORE_OUTDATED' | 'IAP_SDK_MISSING'</code>
-
-
-#### Record
-
-Construct a type with a set of properties K of type T
-
-<code>{ [P in K]: T; }</code>
 
 
 ### Enums

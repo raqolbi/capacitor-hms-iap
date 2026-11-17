@@ -4,7 +4,9 @@ android {
     namespace = "com.example.plugin"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.example.plugin"
+        // Must match the app registered in AppGallery Connect.
+        // Override with: ./gradlew assembleDebug -PexampleAppId=your.package.name
+        applicationId project.findProperty('exampleAppId') ?: "com.qolcore.capacitor.hmsiap.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -40,6 +42,8 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+    // The plugin declares the HMS IAP SDK as compileOnly; the app provides it.
+    implementation "com.huawei.hms:iap:6.16.6.305"
 }
 
 apply from: 'capacitor.build.gradle'
@@ -51,4 +55,11 @@ try {
     }
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
+
+// Apply AGConnect only when agconnect-services.json (from AppGallery Connect) is present.
+if (file('agconnect-services.json').exists()) {
+    apply plugin: 'com.huawei.agconnect'
+} else {
+    logger.warn("agconnect-services.json not found: HMS IAP calls will fail until it is added to example-app/android/app/")
 }

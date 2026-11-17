@@ -1,6 +1,6 @@
 # Roadmap
 
-**Status:** 0.1.0 in progress — scaffold done (Capacitor 8, Kotlin, Android only); `isAvailable()` implemented
+**Status:** 0.1.0 in progress — all 0.1.0 methods implemented and built; device-verified up to the AppGallery Connect check. Real purchase test pending AGC setup.
 **Last updated:** 2026-11-17
 
 ---

@@ -264,6 +264,7 @@ interface HmsIapError {
 | `NO_RESULT` | plugin | Activity returned no data |
 | `IAP_SDK_MISSING` | plugin | `com.huawei.hms:iap` not on the classpath |
 | `UNAVAILABLE` | plugin | Not Android, or HMS Core missing |
+| `APP_NOT_CONFIGURED` | HMS framework `907135000` | App ID or signing fingerprint check failed: `agconnect-services.json` missing, wrong package, or SHA-256 not registered in AppGallery Connect (observed on device, HMS Core 6.16.4) |
 | `UNKNOWN` | anything else | Inspect `data.returnCode` |
 | `NOT_IMPLEMENTED` | plugin | Temporary during 0.x: method exists but is not implemented yet |
 

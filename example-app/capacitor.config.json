@@ -1,6 +1,6 @@
 {
-  "appId": "com.example.plugin",
-  "appName": "example-app",
+  "appId": "com.qolcore.capacitor.hmsiap.example",
+  "appName": "HMS IAP Example",
   "webDir": "dist",
   "plugins": {
     "SplashScreen": {

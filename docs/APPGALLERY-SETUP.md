@@ -67,9 +67,22 @@ apply plugin: 'com.huawei.agconnect'
 
 ### 3.3 `agconnect-services.json`
 
-Place it in `android/app/`.
+Place it in `android/app/`. Without it (or without a registered SHA-256 fingerprint for the signing key in use, including the **debug** key), every IAP call fails with `APP_NOT_CONFIGURED` (HMS code `907135000`).
 
-### 3.4 Multi-store apps (optional)
+### 3.4 `allowBackup` conflict
+
+The HMS IAP SDK manifest sets `android:allowBackup="false"`. If your app sets `allowBackup="true"`, the manifest merge fails. Keep your value with `tools:replace`:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application
+        tools:replace="android:allowBackup"
+        android:allowBackup="true"
+        ...>
+```
+
+### 3.5 Multi-store apps (optional)
 
 If the same app is also built for another store, scope Huawei pieces to a product flavor:
 

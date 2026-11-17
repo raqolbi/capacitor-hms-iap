@@ -30,8 +30,7 @@ class HmsIap(private val context: Context) {
             false
         }
 
-    // TODO(0.1.0): isEnvReady, obtainProductInfo, createPurchaseIntent,
-    //  parsePurchaseResultInfoFromIntent, obtainOwnedPurchases. See docs/DESIGN.md §3.
+    // HMS calls live in HmsIapClient (created only when the SDK is present).
     // TODO(0.2.0): consumeOwnedPurchase, obtainOwnedPurchaseRecord, isSandboxActivated.
     // TODO(0.3.0): startIapActivity, enablePendingPurchase.
 

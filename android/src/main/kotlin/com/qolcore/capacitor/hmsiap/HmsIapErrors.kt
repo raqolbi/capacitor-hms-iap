@@ -1,5 +1,9 @@
 package com.qolcore.capacitor.hmsiap
 
+import com.getcapacitor.JSObject
+import com.huawei.hms.iap.IapApiException
+import com.huawei.hms.iap.entity.OrderStatusCode
+
 /**
  * Stable error codes returned to JavaScript as `error.code`.
  * Keep in sync with `HmsIapErrorCode` in src/definitions.ts.
@@ -17,9 +21,52 @@ object HmsIapErrors {
     const val NO_RESULT = "NO_RESULT"
     const val IAP_SDK_MISSING = "IAP_SDK_MISSING"
     const val UNAVAILABLE = "UNAVAILABLE"
+    const val APP_NOT_CONFIGURED = "APP_NOT_CONFIGURED"
     const val NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
     const val UNKNOWN = "UNKNOWN"
+}
 
-    // TODO(0.1.0): map com.huawei.hms.iap.entity.OrderStatusCode constants
-    //  (read from the SDK, not hard-coded) to the codes above. See docs/DESIGN.md §4.
+/** A rejection ready to be passed to PluginCall.reject. Touches HMS classes. */
+internal data class HmsIapFailure(val code: String, val message: String, val data: JSObject)
+
+internal object HmsIapErrorMapper {
+
+    /** Observed when agconnect-services.json is missing or the SHA-256 fingerprint is not registered. */
+    private const val HMS_APP_AUTH_FAILED = 907135000
+
+    /** Maps an HMS OrderStatusCode / returnCode to a plugin error code. */
+    fun codeFor(returnCode: Int): String = when (returnCode) {
+        OrderStatusCode.ORDER_STATE_CANCEL -> HmsIapErrors.USER_CANCELED
+        OrderStatusCode.ORDER_HWID_NOT_LOGIN -> HmsIapErrors.NOT_SIGNED_IN
+        OrderStatusCode.ORDER_PRODUCT_OWNED -> HmsIapErrors.ALREADY_OWNED
+        OrderStatusCode.ORDER_PRODUCT_NOT_OWNED -> HmsIapErrors.NOT_OWNED
+        OrderStatusCode.ORDER_PRODUCT_CONSUMED -> HmsIapErrors.ALREADY_CONSUMED
+        OrderStatusCode.ORDER_ACCOUNT_AREA_NOT_SUPPORTED -> HmsIapErrors.REGION_NOT_SUPPORTED
+        OrderStatusCode.ORDER_STATE_NET_ERROR -> HmsIapErrors.NETWORK_ERROR
+        OrderStatusCode.ORDER_STATE_PARAM_ERROR -> HmsIapErrors.INVALID_ARGUMENT
+        // HMS framework (not OrderStatusCode): app ID / signing fingerprint check failed.
+        HMS_APP_AUTH_FAILED -> HmsIapErrors.APP_NOT_CONFIGURED
+        else -> HmsIapErrors.UNKNOWN
+    }
+
+    fun fromReturnCode(returnCode: Int, errMsg: String?): HmsIapFailure {
+        val data = JSObject().apply {
+            put("returnCode", returnCode)
+            if (!errMsg.isNullOrEmpty()) put("errMsg", errMsg)
+        }
+        return HmsIapFailure(codeFor(returnCode), errMsg ?: "HMS IAP returned $returnCode", data)
+    }
+
+    fun fromException(e: Exception): HmsIapFailure {
+        if (e is IapApiException) {
+            val data = JSObject().apply {
+                put("returnCode", e.statusCode)
+                put("statusCode", e.status?.statusCode ?: e.statusCode)
+                e.status?.statusMessage?.let { put("errMsg", it) }
+            }
+            val message = e.status?.statusMessage ?: e.message ?: "HMS IAP error ${e.statusCode}"
+            return HmsIapFailure(codeFor(e.statusCode), message, data)
+        }
+        return HmsIapFailure(HmsIapErrors.UNKNOWN, e.message ?: e.toString(), JSObject())
+    }
 }
