@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Needed on Android 11+ to detect whether HMS Core (APK) is installed. -->
+    <queries>
+        <package android:name="com.huawei.hwid" />
+    </queries>
+</manifest>

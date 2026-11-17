@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>capacitor-hms-iap example</title>
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <main>
+      <h1>capacitor-hms-iap</h1>
+      <p>Manual test app. Not published to npm.</p>
+      <label for="productId">Product ID</label>
+      <input type="text" id="productId" value="premium_lifetime" />
+      <label for="productType">Type</label>
+      <select id="productType">
+        <option value="0">Consumable</option>
+        <option value="1" selected>Non-consumable</option>
+        <option value="2">Subscription</option>
+      </select>
+      <p>
+        <button onclick="run('isAvailable')">isAvailable</button>
+        <button onclick="run('isEnvReady')">isEnvReady</button>
+        <button onclick="run('getProducts')">getProducts</button>
+        <button onclick="run('purchase')">purchase</button>
+        <button onclick="run('getOwnedPurchases')">getOwnedPurchases</button>
+      </p>
+      <pre id="output"></pre>
+    </main>
+    <script src="./js/example.js" type="module"></script>
+  </body>
+</html>
