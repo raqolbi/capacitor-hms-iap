@@ -1,6 +1,6 @@
 {
   "name": "capacitor-hms-iap",
-  "version": "0.1.0-dev.0",
+  "version": "0.1.0",
   "description": "Capacitor plugin for HUAWEI In-App Purchases (HMS IAP) on AppGallery",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

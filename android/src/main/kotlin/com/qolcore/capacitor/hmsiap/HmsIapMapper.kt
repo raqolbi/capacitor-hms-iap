@@ -42,6 +42,14 @@ internal object HmsIapMapper {
             put("purchase", parsePurchase(purchaseData))
         }
 
+    /** Builds a ConsumeResult: raw consume data + signature. */
+    fun consumeResult(consumeData: String?, signature: String?, algorithm: String?): JSObject =
+        JSObject().apply {
+            put("consumeData", consumeData ?: "")
+            put("signature", signature ?: "")
+            put("signatureAlgorithm", algorithm ?: DEFAULT_ALGORITHM)
+        }
+
     fun purchaseList(data: List<String>?, signatures: List<String>?, algorithm: String?): JSArray {
         val array = JSArray()
         data.orEmpty().forEachIndexed { i, json ->

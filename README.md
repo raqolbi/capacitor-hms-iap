@@ -1,6 +1,6 @@
 # capacitor-hms-iap
 
-> **Status: early development (0.1.0-dev), not published to npm yet.** A non-consumable sandbox purchase, signature check, `ALREADY_OWNED` and restore are verified on a Huawei device. See [Implementation status](#implementation-status).
+> **Status: 0.1.0 — early release, Android only.** Purchase, consume, cancel, signature check and restore are verified on a Huawei device in the sandbox. Subscriptions and purchase history come in later versions. See [Implementation status](#implementation-status).
 
 A Capacitor plugin for **HUAWEI In-App Purchases (IAP)**: sell consumables, non-consumables and subscriptions in Android apps distributed through **Huawei AppGallery**.
 
@@ -64,10 +64,11 @@ Full specification: [`docs/DESIGN.md`](./docs/DESIGN.md).
 | `isEnvReady` | ✅ (with HUAWEI ID sign-in) | ✅ |
 | `isSandboxActivated` | ✅ | ✅ |
 | `getProducts` | ✅ | ✅ non-consumable |
-| `purchase` | ✅ | ✅ non-consumable in sandbox; cancel not yet tested |
-| `getOwnedPurchases` | ✅ (incl. pending, paging) | ✅ restore after clearing app data |
+| `purchase` | ✅ | ✅ non-consumable and consumable in sandbox; cancel → `USER_CANCELED` |
+| `getOwnedPurchases` | ✅ (incl. pending, paging) | ✅ restore after clearing data and after reinstall |
+| `consumePurchase` | ✅ | ✅ consumable consumed, no longer owned |
 | `setLogging` | ✅ | — |
-| `consumePurchase`, `getPurchaseHistory` | ⏳ rejects `NOT_IMPLEMENTED` (0.2.0) | — |
+| `getPurchaseHistory` | ⏳ rejects `NOT_IMPLEMENTED` (0.2.0) | — |
 | `openSubscriptionManagement`, `enablePendingPurchase` | ⏳ rejects `NOT_IMPLEMENTED` (0.3.0) | — |
 
 Web and iOS: `isAvailable` resolves `{ available: false, reason: 'NOT_ANDROID' }`; everything else rejects with `UNAVAILABLE`.
@@ -84,14 +85,12 @@ The plugin never verifies signatures and never needs your IAP public key, so it 
 
 ## Install
 
-Once published:
-
 ```bash
 npm install capacitor-hms-iap
 npx cap sync android
 ```
 
-Before publishing, install from a local checkout (`"capacitor-hms-iap": "file:../path/to/capacitor-hms-iap"`) after running `npm run build` in the plugin. Installing from git is not supported yet because `dist/` is not committed and there is no `prepare` script.
+Installing straight from git is not supported, because `dist/` is not committed. For local development use `"capacitor-hms-iap": "file:../path/to/capacitor-hms-iap"` after `npm run build` in the plugin.
 
 Then follow [`docs/APPGALLERY-SETUP.md`](./docs/APPGALLERY-SETUP.md): the app must add `com.huawei.hms:iap`, the AGConnect Gradle plugin and `agconnect-services.json`.
 

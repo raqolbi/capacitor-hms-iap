@@ -7,6 +7,7 @@ import com.getcapacitor.JSObject
 import com.huawei.hms.iap.Iap
 import com.huawei.hms.iap.IapApiException
 import com.huawei.hms.iap.IapClient
+import com.huawei.hms.iap.entity.ConsumeOwnedPurchaseReq
 import com.huawei.hms.iap.entity.IsEnvReadyResult
 import com.huawei.hms.iap.entity.IsSandboxActivatedReq
 import com.huawei.hms.iap.entity.OrderStatusCode
@@ -120,6 +121,24 @@ internal class HmsIapClient(activity: Activity) {
         val pending: PendingIntent? = status.resolution
         val intent: Intent? = status.resolutionIntent
         return if (pending != null || intent != null) Step.NeedsActivity(pending, intent) else null
+    }
+
+    fun consumePurchase(
+        purchaseToken: String,
+        developerChallenge: String?,
+        signatureAlgorithm: String?,
+        callback: (Step) -> Unit,
+    ) {
+        val req = ConsumeOwnedPurchaseReq().apply {
+            this.purchaseToken = purchaseToken
+            developerChallenge?.let { this.developerChallenge = it }
+            signatureAlgorithm?.let { this.signatureAlgorithm = it }
+        }
+        client.consumeOwnedPurchase(req).addOnSuccessListener { result ->
+            callback(Step.Done(HmsIapMapper.consumeResult(result.consumePurchaseData, result.dataSignature, result.signatureAlgorithm)))
+        }.addOnFailureListener { e ->
+            callback(Step.Failed(HmsIapErrorMapper.fromException(e)))
+        }
     }
 
     /** Parses the checkout activity result. */

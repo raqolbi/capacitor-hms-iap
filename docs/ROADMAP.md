@@ -1,6 +1,6 @@
 # Roadmap
 
-**Status:** 0.1.0 in progress — sandbox purchase, signature check, `ALREADY_OWNED` and restore verified on a Huawei device (2026-11-18). Remaining for 0.1.0: cancel at checkout (needs a product not yet owned) and restore after a full reinstall.
+**Status:** 0.1.0 released (2026-11-18). Next: 0.2.0.
 **Last updated:** 2026-11-18
 
 ---
@@ -9,8 +9,8 @@
 
 | Version | Scope | Exit criteria |
 |---------|-------|---------------|
-| **0.1.0** | Scaffold with `npm init @capacitor/plugin`; `isAvailable`, `isEnvReady`, `isSandboxActivated`, `getProducts`, `purchase`, `getOwnedPurchases`, `setLogging`; web stub; error mapping | One non-consumable bought ✅, restored after reinstall (✅ after clearing data; full reinstall pending), and canceled cleanly (pending) on a real Huawei device |
-| **0.2.0** | `consumePurchase`, `getPurchaseHistory` | Consumable buy → grant → consume → buy again |
+| **0.1.0** ✅ released 2026-11-18 | `isAvailable`, `isEnvReady`, `isSandboxActivated`, `getProducts`, `purchase`, `getOwnedPurchases`, `consumePurchase`, `setLogging`; web stub; error mapping | One non-consumable bought, restored after reinstall, and canceled cleanly on a real Huawei device — all met |
+| **0.2.0** | `getPurchaseHistory` (`consumePurchase` shipped early in 0.1.0) | Consumable buy → grant → consume → buy again; history lists the consumed item |
 | **0.3.0** | Subscriptions: subscription fields, `openSubscriptionManagement`, `enablePendingPurchase` | Subscribe, renew in sandbox, cancel, expire |
 | **0.4.0** | Multi-store flavor guide validated (`compileOnly` + `huaweiImplementation` + conditional `agcp`); example app with two flavors | Play flavor builds without any `com.huawei.*` classes |
 | **1.0.0** | API freeze, full docs, npm publish, CI | Used in at least one production app on AppGallery |

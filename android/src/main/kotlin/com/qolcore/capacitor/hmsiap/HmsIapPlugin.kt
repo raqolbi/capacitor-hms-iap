@@ -116,12 +116,18 @@ class HmsIapPlugin : Plugin() {
 
     @PluginMethod
     fun consumePurchase(call: PluginCall) {
-        requireClient(call) ?: return
-        if (call.getString("purchaseToken").isNullOrBlank()) {
+        val iap = requireClient(call) ?: return
+        val token = call.getString("purchaseToken")
+        if (token.isNullOrBlank()) {
             call.reject("purchaseToken is required", HmsIapErrors.INVALID_ARGUMENT)
             return
         }
-        notImplemented(call, "0.2.0")
+        log("consumePurchase()")
+        iap.consumePurchase(
+            token,
+            call.getString("developerChallenge"),
+            call.getString("signatureAlgorithm"),
+        ) { step -> handleStep(call, step, null) }
     }
 
     @PluginMethod
@@ -194,14 +200,27 @@ class HmsIapPlugin : Plugin() {
             call.reject("Huawei screen has no intent", HmsIapErrors.UNKNOWN)
             return
         }
+        // The user may leave the app while HMS prepares the screen. The activity is
+        // then destroyed and its launchers unregistered; launching would crash the app.
+        val host = activity
+        if (host == null || host.isFinishing || host.isDestroyed) {
+            call.reject("The app left the foreground before the Huawei screen opened", HmsIapErrors.USER_CANCELED)
+            return
+        }
         pendingCall = call
         pendingKind = kind
-        if (pending != null) {
-            log("launching Huawei screen: $kind (PendingIntent)")
-            senderLauncher.launch(IntentSenderRequest.Builder(pending.intentSender).build())
-        } else if (intent != null) {
-            log("launching Huawei screen: $kind (Intent)")
-            plainLauncher.launch(intent)
+        try {
+            if (pending != null) {
+                log("launching Huawei screen: $kind (PendingIntent)")
+                senderLauncher.launch(IntentSenderRequest.Builder(pending.intentSender).build())
+            } else if (intent != null) {
+                log("launching Huawei screen: $kind (Intent)")
+                plainLauncher.launch(intent)
+            }
+        } catch (e: IllegalStateException) {
+            pendingCall = null
+            pendingKind = null
+            call.reject("The app left the foreground before the Huawei screen opened", HmsIapErrors.USER_CANCELED)
         }
     }
 

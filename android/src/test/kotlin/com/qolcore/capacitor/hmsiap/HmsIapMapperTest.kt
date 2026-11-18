@@ -66,6 +66,18 @@ class HmsIapMapperTest {
     }
 
     @Test
+    fun consumeResultDefaultsMissingValues() {
+        val empty = HmsIapMapper.consumeResult(null, null, null)
+        assertEquals("", empty.getString("consumeData"))
+        assertEquals("", empty.getString("signature"))
+        assertEquals("SHA256WithRSA", empty.getString("signatureAlgorithm"))
+        val full = HmsIapMapper.consumeResult("""{"consumptionState":1}""", "c2ln", "SHA256WithRSA/PSS")
+        assertEquals("""{"consumptionState":1}""", full.getString("consumeData"))
+        assertEquals("c2ln", full.getString("signature"))
+        assertEquals("SHA256WithRSA/PSS", full.getString("signatureAlgorithm"))
+    }
+
+    @Test
     fun purchaseListPairsDataWithSignaturesByIndex() {
         val list = HmsIapMapper.purchaseList(
             listOf("""{"productId":"a"}""", """{"productId":"b"}"""),

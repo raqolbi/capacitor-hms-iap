@@ -15,6 +15,12 @@ const calls = {
   getProducts: () => HmsIap.getProducts({ productIds: [productId()], type: type() }),
   purchase: () => HmsIap.purchase({ productId: productId(), type: type() }),
   getOwnedPurchases: () => HmsIap.getOwnedPurchases({ type: type() }),
+  // Consumes the first purchase in the last result (purchase or getOwnedPurchases).
+  consumePurchase: () => {
+    const item = signedItems(lastResult)[0];
+    if (!item) throw new Error('Run purchase or getOwnedPurchases (Consumable) first.');
+    return HmsIap.consumePurchase({ purchaseToken: item.purchase.purchaseToken });
+  },
 };
 
 window.run = async (name) => {
