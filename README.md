@@ -46,7 +46,8 @@ const result = await HmsIap.purchase({
   type: ProductType.NonConsumable,
 });
 
-// 4. Verify result.purchaseData + result.signature with your IAP public key,
+// 4. Verify result.purchaseData + result.signature with your IAP public key
+//    (where to get it and how: docs/APPGALLERY-SETUP.md §2.3 and §6),
 //    then unlock the content.
 
 // 5. Restore on reinstall or a new device.
