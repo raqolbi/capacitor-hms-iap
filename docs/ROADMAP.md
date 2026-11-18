@@ -9,18 +9,18 @@
 
 | Version | Scope | Exit criteria |
 |---------|-------|---------------|
-| **0.1.0** | Scaffold with `npm init @capacitor/plugin`; `isAvailable`, `isEnvReady`, `getProducts`, `purchase`, `getOwnedPurchases`; web stub; error mapping | One non-consumable bought, restored after reinstall, and canceled cleanly on a real Huawei device |
-| **0.2.0** | `consumePurchase`, `getPurchaseHistory`, `isSandboxActivated`, `setLogging` | Consumable buy → grant → consume → buy again |
+| **0.1.0** | Scaffold with `npm init @capacitor/plugin`; `isAvailable`, `isEnvReady`, `isSandboxActivated`, `getProducts`, `purchase`, `getOwnedPurchases`, `setLogging`; web stub; error mapping | One non-consumable bought ✅, restored after reinstall (✅ after clearing data; full reinstall pending), and canceled cleanly (pending) on a real Huawei device |
+| **0.2.0** | `consumePurchase`, `getPurchaseHistory` | Consumable buy → grant → consume → buy again |
 | **0.3.0** | Subscriptions: subscription fields, `openSubscriptionManagement`, `enablePendingPurchase` | Subscribe, renew in sandbox, cancel, expire |
 | **0.4.0** | Multi-store flavor guide validated (`compileOnly` + `huaweiImplementation` + conditional `agcp`); example app with two flavors | Play flavor builds without any `com.huawei.*` classes |
 | **1.0.0** | API freeze, full docs, npm publish, CI | Used in at least one production app on AppGallery |
 
-## Repository layout (planned)
+## Repository layout
 
 ```text
 capacitor-hms-iap/
 ├── android/                    # Kotlin/Java plugin source
-│   └── src/main/java/.../HmsIapPlugin.kt
+│   └── src/main/kotlin/com/qolcore/capacitor/hmsiap/   # HmsIapPlugin, HmsIapClient, mapper, errors
 ├── src/
 │   ├── definitions.ts          # public TypeScript API (from DESIGN.md §2)
 │   ├── index.ts
@@ -39,8 +39,8 @@ capacitor-hms-iap/
 
 | Layer | How |
 |-------|-----|
-| TypeScript | Unit tests for argument validation and web stub (Vitest/Jest) |
-| Native mapping | JVM unit tests for JSON ↔ HMS entity mapping and error-code mapping (no device needed) |
+| TypeScript | Unit tests for argument validation and web stub (Vitest/Jest) — **not written yet** |
+| Native mapping | JVM unit tests for JSON ↔ HMS entity mapping and error-code mapping (no device needed) — **not written yet** |
 | Integration | Manual matrix on real devices with the example app |
 
 ### Device matrix (minimum)

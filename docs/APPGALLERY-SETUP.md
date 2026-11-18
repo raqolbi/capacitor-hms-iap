@@ -136,7 +136,16 @@ dependencies {
 ```
 
 - Put `agconnect-services.json` in `android/app/src/huawei/`.
-- Apply `com.huawei.agconnect` only when building Huawei variants. **The exact conditional setup will be validated and documented in a later version of this guide.**
+- Apply `com.huawei.agconnect` only when the Huawei variant needs it, for example:
+
+  ```gradle
+  // android/app/build.gradle (end of file)
+  if (file('src/huawei/agconnect-services.json').exists()) {
+      apply plugin: 'com.huawei.agconnect'
+  }
+  ```
+
+- Validated so far in a production app (2026-11-18): flavors with the HMS dependency and AGConnect switched off produce an APK without any `com.huawei.*` classes. A Play build next to an active Huawei IAP build is **not yet validated**; that is milestone 0.4.0 (`ROADMAP.md`).
 - In the other flavor, `HmsIap.isAvailable()` returns `IAP_SDK_MISSING`, so your app can pick a different billing provider.
 
 ## 4. Testing

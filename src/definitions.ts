@@ -16,7 +16,11 @@ export enum ProductType {
 export enum SignatureAlgorithm {
   /** HMS default. */
   Sha256WithRsa = 'SHA256WithRSA',
-  /** Recommended. Enable it in AppGallery Connect as well. */
+  /**
+   * Stronger, but only honored after the PSS switch is on in AppGallery Connect
+   * (Earn → In-App Purchases → Settings). Until then HMS returns `SHA256WithRSA`;
+   * always verify with the algorithm reported in the result.
+   */
   Sha256WithRsaPss = 'SHA256WithRSA/PSS',
 }
 
@@ -65,6 +69,7 @@ export interface HmsIapErrorData {
   errMsg?: string;
 }
 
+/** `HMS_CORE_OUTDATED` is reserved; the Android implementation does not return it yet. */
 export type AvailabilityReason = 'NOT_ANDROID' | 'HMS_CORE_MISSING' | 'HMS_CORE_OUTDATED' | 'IAP_SDK_MISSING';
 
 export interface AvailabilityResult {
@@ -232,6 +237,10 @@ export interface HmsIapPlugin {
 
   /**
    * Launches the Huawei checkout screen.
+   *
+   * Resolves only after the user closes Huawei's "Payment result" screen, so keep
+   * the UI in a processing state until then. Verify `purchaseData` + `signature`
+   * before granting anything (docs/APPGALLERY-SETUP.md §6).
    */
   purchase(options: PurchaseOptions): Promise<PurchaseResult>;
 

@@ -207,8 +207,9 @@ export interface ConsumeResult {
 
 ### 3.1 Activity results
 
-- Capacitor's `startActivityForResult(call, intent, "callbackName")` and an `@ActivityCallback` method are used instead of overriding `onActivityResult`.
-- HMS returns a `Status` with a `PendingIntent`. The plugin wraps it with `IntentSenderRequest` / the bridge's activity launcher so the result reaches the same `PluginCall`.
+- In `load()` the plugin registers two AndroidX Activity Result launchers: `StartIntentSenderForResult` and `StartActivityForResult`. The pending `PluginCall` is kept until the result arrives.
+- HMS returns the screen in `Status` either as a `PendingIntent` (`getResolution()`) or as a plain `Intent` (`getResolutionIntent()`). HMS Core 6.16.4 returns the plain `Intent` for checkout. The plugin launches whichever is present.
+- The checkout result arrives only after the user closes Huawei's "Payment result" screen with OK.
 - Only one checkout may run at a time. A second `purchase()` while one is active rejects with `PURCHASE_IN_PROGRESS`.
 - If the activity result intent is `null`, the call rejects with `NO_RESULT`.
 
@@ -280,7 +281,7 @@ interface HmsIapError {
 ## 5. Security notes (for app developers)
 
 - **Always verify** `purchaseData` against `signature` with the public key from AppGallery Connect (*Earn → In-App Purchases → Settings*). Verification can happen on-device (offline-friendly) or on a server (stronger).
-- Prefer `SHA256WithRSA/PSS` and enable it in AppGallery Connect.
+- `SHA256WithRSA/PSS` is stronger but only honored once its switch is on in AppGallery Connect; until then HMS returns `SHA256WithRSA` even if PSS was requested. Always verify with the algorithm reported in the result. Where the public key lives and a verification snippet: `APPGALLERY-SETUP.md` §6.
 - Check `purchaseState === Purchased` and the expected `productId` / `packageName` before granting content.
 - Grant consumables **before** consuming them, and consume only after the grant is persisted.
 - For subscriptions or high-value content, validate on a server with the HMS IAP server API.
@@ -322,7 +323,7 @@ on start → getOwnedPurchases(Subscription) → keep only isSubscriptionValid
 
 | # | Question | Default until decided |
 |---|----------|-----------------------|
-| 1 | Ship an optional `verifySignature()` helper in JS (Web Crypto) for on-device verification? | Not in v0.1; document a snippet instead |
+| 1 | Ship an optional `verifySignature()` helper in JS (Web Crypto) for on-device verification? | Not in v0.1; snippet documented in `APPGALLERY-SETUP.md` §6. PKCS#1 v1.5 confirmed with sandbox data; PSS salt length still unconfirmed |
 | 2 | Include the HMS SDK as `implementation` for apps that only target AppGallery? | No — keep `compileOnly`, document the one-line dependency |
 | 3 | Emit an event when a pending purchase completes? | No — apps poll `getOwnedPurchases` on resume |
 | 4 | Support `IsEnvReady` "app touch" (HUAWEI Vision / devices without HMS account UI)? | Option passed through, untested |
