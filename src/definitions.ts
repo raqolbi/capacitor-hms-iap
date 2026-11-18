@@ -107,7 +107,7 @@ export interface SandboxResult {
 
 export interface GetProductsOptions {
   /** Product IDs configured in AppGallery Connect. */
-  productIds: string[];
+  productIds: Array<string>;
   type: ProductType;
 }
 
@@ -198,9 +198,9 @@ export interface OwnedQuery {
 }
 
 export interface OwnedPurchasesResult {
-  purchases: PurchaseResult[];
+  purchases: Array<PurchaseResult>;
   /** Purchases waiting for payment (pending purchase). */
-  pendingPurchases: PurchaseResult[];
+  pendingPurchases: Array<PurchaseResult>;
   /** Present when more pages are available. */
   continuationToken?: string;
 }

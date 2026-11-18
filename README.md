@@ -387,7 +387,7 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 
 | Prop             | Type                                                | Description                                                          |
 | ---------------- | --------------------------------------------------- | -------------------------------------------------------------------- |
-| **`productIds`** | <code>{}</code>                                     | <a href="#product">Product</a> IDs configured in AppGallery Connect. |
+| **`productIds`** | <code>Array&lt;string&gt;</code>                    | <a href="#product">Product</a> IDs configured in AppGallery Connect. |
 | **`type`**       | <code><a href="#producttype">ProductType</a></code> |                                                                      |
 
 
@@ -453,11 +453,11 @@ Turns verbose native logging on or off. Tokens and signatures are never logged.
 
 #### OwnedPurchasesResult
 
-| Prop                    | Type                | Description                                       |
-| ----------------------- | ------------------- | ------------------------------------------------- |
-| **`purchases`**         | <code>{}</code>     |                                                   |
-| **`pendingPurchases`**  | <code>{}</code>     | Purchases waiting for payment (pending purchase). |
-| **`continuationToken`** | <code>string</code> | Present when more pages are available.            |
+| Prop                    | Type                                                                   | Description                                       |
+| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
+| **`purchases`**         | <code>Array&lt;<a href="#purchaseresult">PurchaseResult</a>&gt;</code> |                                                   |
+| **`pendingPurchases`**  | <code>Array&lt;<a href="#purchaseresult">PurchaseResult</a>&gt;</code> | Purchases waiting for payment (pending purchase). |
+| **`continuationToken`** | <code>string</code>                                                    | Present when more pages are available.            |
 
 
 #### OwnedQuery
