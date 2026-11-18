@@ -1,7 +1,7 @@
 package com.qolcore.capacitor.hmsiap
 
 import android.app.Activity
-import android.app.PendingIntent
+import android.content.Intent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -25,6 +25,8 @@ class HmsIapPlugin : Plugin() {
 
     /** Huawei screens (sign-in, checkout) are launched through this. */
     private var launcher: ActivityResultLauncher<IntentSenderRequest>? = null
+    /** Same, for screens that HMS returns as a plain Intent. */
+    private var intentLauncher: ActivityResultLauncher<Intent>? = null
     private var pendingCall: PluginCall? = null
     private var pendingKind: PendingKind? = null
 
@@ -34,6 +36,9 @@ class HmsIapPlugin : Plugin() {
         implementation = HmsIap(context)
         launcher = activity.registerForActivityResult(
             ActivityResultContracts.StartIntentSenderForResult(),
+        ) { result -> onHuaweiActivityResult(result) }
+        intentLauncher = activity.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
         ) { result -> onHuaweiActivityResult(result) }
     }
 
@@ -166,26 +171,38 @@ class HmsIapPlugin : Plugin() {
                 if (kind == null) {
                     call.reject("Unexpected Huawei activity request", HmsIapErrors.UNKNOWN)
                 } else {
-                    launch(call, step.intent, kind)
+                    launch(call, step, kind)
                 }
             }
         }
     }
 
-    private fun launch(call: PluginCall, intent: PendingIntent, kind: PendingKind) {
+    private fun launch(call: PluginCall, screen: HmsIapClient.Step.NeedsActivity, kind: PendingKind) {
         if (pendingCall != null) {
             call.reject("Another Huawei screen is already open", HmsIapErrors.PURCHASE_IN_PROGRESS)
             return
         }
-        val l = launcher
-        if (l == null) {
+        val senderLauncher = launcher
+        val plainLauncher = intentLauncher
+        if (senderLauncher == null || plainLauncher == null) {
             call.reject("Activity launcher not ready", HmsIapErrors.UNKNOWN)
+            return
+        }
+        val pending = screen.pendingIntent
+        val intent = screen.intent
+        if (pending == null && intent == null) {
+            call.reject("Huawei screen has no intent", HmsIapErrors.UNKNOWN)
             return
         }
         pendingCall = call
         pendingKind = kind
-        log("launching Huawei screen: $kind")
-        l.launch(IntentSenderRequest.Builder(intent.intentSender).build())
+        if (pending != null) {
+            log("launching Huawei screen: $kind (PendingIntent)")
+            senderLauncher.launch(IntentSenderRequest.Builder(pending.intentSender).build())
+        } else if (intent != null) {
+            log("launching Huawei screen: $kind (Intent)")
+            plainLauncher.launch(intent)
+        }
     }
 
     private fun onHuaweiActivityResult(result: ActivityResult) {

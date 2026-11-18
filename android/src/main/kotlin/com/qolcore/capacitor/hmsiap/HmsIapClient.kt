@@ -27,7 +27,12 @@ internal class HmsIapClient(activity: Activity) {
     /** Outcome of a call that may need a Huawei activity (sign-in or checkout). */
     sealed class Step {
         data class Done(val result: JSObject) : Step()
-        data class NeedsActivity(val intent: PendingIntent) : Step()
+        /**
+         * HMS hands back either a [PendingIntent] or a plain [Intent] in
+         * `Status`; newer HMS Core versions return the Intent form for checkout
+         * (`getResolution()` is then null). Exactly one of the two is set.
+         */
+        data class NeedsActivity(val pendingIntent: PendingIntent?, val intent: Intent?) : Step()
         data class Failed(val failure: HmsIapFailure) : Step()
     }
 
@@ -40,11 +45,15 @@ internal class HmsIapClient(activity: Activity) {
                 result.carrierId?.let { put("carrierId", it) }
             }))
         }.addOnFailureListener { e ->
-            if (resolveSignIn && e is IapApiException &&
-                e.statusCode == OrderStatusCode.ORDER_HWID_NOT_LOGIN &&
-                e.status?.hasResolution() == true
+            val screen = if (resolveSignIn && e is IapApiException &&
+                e.statusCode == OrderStatusCode.ORDER_HWID_NOT_LOGIN
             ) {
-                callback(Step.NeedsActivity(e.status.resolution))
+                screenOf(e.status)
+            } else {
+                null
+            }
+            if (screen != null) {
+                callback(screen)
             } else {
                 callback(Step.Failed(HmsIapErrorMapper.fromException(e)))
             }
@@ -94,15 +103,23 @@ internal class HmsIapClient(activity: Activity) {
             signatureAlgorithm?.let { this.signatureAlgorithm = it }
         }
         client.createPurchaseIntent(req).addOnSuccessListener { result ->
-            val status = result.status
-            if (status != null && status.hasResolution()) {
-                callback(Step.NeedsActivity(status.resolution))
+            val screen = screenOf(result.status)
+            if (screen != null) {
+                callback(screen)
             } else {
                 callback(Step.Failed(HmsIapErrorMapper.fromReturnCode(result.returnCode, result.errMsg)))
             }
         }.addOnFailureListener { e ->
             callback(Step.Failed(HmsIapErrorMapper.fromException(e)))
         }
+    }
+
+    /** The Huawei screen carried by [status], in whichever form HMS used. */
+    private fun screenOf(status: com.huawei.hms.support.api.client.Status?): Step.NeedsActivity? {
+        if (status == null || !status.hasResolution()) return null
+        val pending: PendingIntent? = status.resolution
+        val intent: Intent? = status.resolutionIntent
+        return if (pending != null || intent != null) Step.NeedsActivity(pending, intent) else null
     }
 
     /** Parses the checkout activity result. */
