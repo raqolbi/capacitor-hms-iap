@@ -163,13 +163,14 @@ Results observed on a Huawei device (Android 10, HMS Core 6.16.4) in the sandbox
 
 ## 6. Using the IAP public key in your app
 
-The plugin **does not** verify signatures and never needs the key. Verification is the app's job (or your server's), so the key belongs in **your app's configuration**, not in this plugin.
+The plugin **does not** verify signatures and never reads the key, so it works the same in any framework (React, Next.js, Svelte, Vue, plain JS). The key name and where it is stored are up to your app; the verify function below takes it as a parameter. Verification is the app's job (or your server's), so the key belongs in **your app's configuration**, not in this plugin.
 
 **Where to put it**
 
 | App setup | Suggested place |
 |-----------|-----------------|
 | Vite / plain web build | `VITE_HMS_IAP_PUBLIC_KEY` in `.env` |
+| SvelteKit (static adapter) | `PUBLIC_HMS_IAP_PUBLIC_KEY` in `.env`, read with `import { PUBLIC_HMS_IAP_PUBLIC_KEY } from '$env/static/public'` |
 | Next.js static export | `NEXT_PUBLIC_HMS_IAP_PUBLIC_KEY` in `.env.production` or your build environment |
 | Your own server | Server config / secret store; verify there instead of on the device |
 
