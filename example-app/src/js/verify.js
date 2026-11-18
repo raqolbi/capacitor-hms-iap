@@ -6,7 +6,8 @@ const b64ToBytes = (b64) => Uint8Array.from(atob(b64.replace(/\s+/g, '')), (c) =
 
 function params(algorithm) {
   return algorithm === 'SHA256WithRSA/PSS'
-    ? { importName: 'RSA-PSS', verify: { name: 'RSA-PSS', saltLength: 32 } }
+    ? // Salt length not yet confirmed against real PSS data (needs the PSS switch in AGC).
+      { importName: 'RSA-PSS', verify: { name: 'RSA-PSS', saltLength: 32 } }
     : { importName: 'RSASSA-PKCS1-v1_5', verify: { name: 'RSASSA-PKCS1-v1_5' } };
 }
 
