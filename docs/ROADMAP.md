@@ -39,8 +39,8 @@ capacitor-hms-iap/
 
 | Layer | How |
 |-------|-----|
-| TypeScript | Unit tests for argument validation and web stub (Vitest/Jest) — **not written yet** |
-| Native mapping | JVM unit tests for JSON ↔ HMS entity mapping and error-code mapping (no device needed) — **not written yet** |
+| TypeScript | Vitest (`npm test`): web stub, public constants, TS ↔ Kotlin error-code parity, error codes documented in DESIGN.md |
+| Native mapping | JUnit (`cd android && ./gradlew test`): HMS return code → error code (literal values), purchase JSON parsing incl. a real sandbox payload, product mapping |
 | Integration | Manual matrix on real devices with the example app |
 
 ### Device matrix (minimum)

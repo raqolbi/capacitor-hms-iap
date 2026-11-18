@@ -25,6 +25,12 @@ It will compile the TypeScript code from `src/` into ESM JavaScript in `dist/esm
 
 Then, Rollup will bundle the code into a single file at `dist/plugin.js`. This file is used in apps without bundlers by including it as a script in `index.html`.
 
+#### `npm test`
+
+Vitest unit tests in `test/`: the web fallback, public constants, and a check that the error codes in `src/definitions.ts`, the Kotlin `HmsIapErrors` and `docs/DESIGN.md` stay identical.
+
+Native unit tests (JUnit, no device needed): `cd android && ./gradlew test`.
+
 #### `npm run verify`
 
 Build and validate the web and native projects.

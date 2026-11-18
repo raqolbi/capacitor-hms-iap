@@ -40,6 +40,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     lintOptions {
         abortOnError = false
     }
@@ -66,6 +69,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.core:core-ktx:$androidxCoreKTXVersion"
     testImplementation "junit:junit:$junitVersion"
+    // JVM unit tests: real HMS entity classes and a real org.json (android.jar only has stubs).
+    testImplementation "com.huawei.hms:iap:$hmsIapVersion"
+    testImplementation "org.json:json:20250517"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 }
