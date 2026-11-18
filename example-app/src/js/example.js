@@ -7,6 +7,7 @@ const type = () => Number(document.getElementById('productType').value);
 const calls = {
   isAvailable: () => HmsIap.isAvailable(),
   isEnvReady: () => HmsIap.isEnvReady(),
+  isSandboxActivated: () => HmsIap.isSandboxActivated(),
   getProducts: () => HmsIap.getProducts({ productIds: [productId()], type: type() }),
   purchase: () => HmsIap.purchase({ productId: productId(), type: type() }),
   getOwnedPurchases: () => HmsIap.getOwnedPurchases({ type: type() }),
